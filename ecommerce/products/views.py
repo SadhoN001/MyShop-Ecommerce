@@ -202,7 +202,6 @@ def payment_process(request):
         return redirect('checkout')
     
 @csrf_exempt
-@login_required()
 def payment_success(request, order_id):
     order = get_object_or_404(Order, id= order_id, user = request.user)
     order.paid = True
@@ -225,7 +224,6 @@ def payment_success(request, order_id):
 
 
 @csrf_exempt
-@login_required()
 def payment_fail(request, order_id):
     order = get_object_or_404(Order, id= order_id, user = request.user)
     order.status = 'canceled'
@@ -234,7 +232,6 @@ def payment_fail(request, order_id):
     return render(request, 'products/payment_fail.html', {'order':order})
 
 @csrf_exempt
-@login_required()
 def payment_cancel(request, order_id):
     order = get_object_or_404(Order, id= order_id, user = request.user)
     order.status = 'canceled'
