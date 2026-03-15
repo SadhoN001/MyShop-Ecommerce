@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Email Verification{% endblock %}
+
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-lg-5 col-md-7 col-sm-10">
+        <div class="card border-0 shadow-lg text-center p-4"
+             style="border-radius: 1.2rem;">
+
+            <!-- Icon -->
+            <div class="mb-3">
+                <div class="bg-success bg-opacity-10 d-inline-flex
+                            justify-content-center align-items-center rounded-circle"
+                     style="width: 90px; height: 90px;">
+                    <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                </div>
+            </div>
+
+            <!-- Title -->
+            <h3 class="fw-bold mb-2">Email Verified 🎉</h3>
+
+            <!-- Message -->
+            <p class="text-muted mb-4">
+                Your email address has been successfully verified.
+                You can now log in to your account and start shopping.
+            </p>
+
+            <!-- Button -->
+            <a href="{% url 'login' %}" class="btn btn-primary btn-lg w-100">
+                Go to Login
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

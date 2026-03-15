@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}MyShop | Home{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ==== HERO ==== */
+.hero-section {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: #fff;
+    border-radius: 15px;
+    padding: 4rem 2rem;
+    margin-bottom: 4rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+}
+
+.hero-subtitle {
+    font-size: 1.4rem;
+    opacity: .9;
+}
+
+.hero-btn {
+    background: #fff;
+    color: #6a11cb;
+    border-radius: 50px;
+    padding: 12px 30px;
+    font-weight: 600;
+}
+
+/* ==== BANNER ==== */
+.banner-section {
+    border-radius: 18px;
+    overflow: hidden;
+    margin-bottom: 4rem;
+}
+
+.banner-img {
+    height: 420px;
+    object-fit: cover;
+    filter: brightness(.75);
+}
+
+/* ==== SECTION HEADER ==== */
+.section-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.section-subtitle {
+    color: #6c757d;
+}
+
+/* ==== PRODUCT CARD ==== */
+.product-card {
+    border-radius: 15px;
+    border: none;
+    transition: .3s;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+}
+
+.product-img-container {
+    height: 200px;
+    overflow: hidden;
+}
+
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-title {
+    font-weight: 600;
+}
+
+.product-price {
+    font-weight: 700;
+}
+
+/* ==== CATEGORY ==== */
+.category-card {
+    border-radius: 15px;
+    border: none;
+    transition: .3s;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+}
+
+.category-icon {
+    font-size: 3rem;
+    background: linear-gradient(135deg,#6a11cb,#2575fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-image {
+    max-height: 420px;
+    animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+.btn-outline-light:hover {
+    background-color: #ffffff;
+    color: #6a11cb;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero-section position-relative overflow-hidden">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            
+            <!-- Text Content -->
+            <div class="col-lg-6">
+                <span class="badge bg-light text-primary mb-3 px-3 py-2 rounded-pill fw-semibold">
+                    🔥 New Collection
+                </span>
+
+                <h1 class="hero-title mt-3">
+                    Welcome to <span class="text-warning">MyShop</span>
+                </h1>
+
+                <p class="hero-subtitle">
+                    Premium products at unbeatable prices
+                </p>
+
+                <p class="opacity-75 mb-4">
+                    Discover high-quality items carefully curated just for you.  
+                    Shop smarter, live better.
+                </p>
+
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="{% url 'product_list' %}" class="btn hero-btn">
+                        <i class="fas fa-shopping-bag me-2"></i> Explore Shop
+                    </a>
+                    <a href="#" class="btn hero-btn rounded-pill px-4">
+                        View Offers
+                    </a>
+                </div>
+            </div>
+
+            <!-- Image -->
+            <div class="col-lg-6 d-none d-lg-block text-center position-relative">
+                <img src="{% static 'img/logo/welcome.jpg' %}"
+                     alt="Welcome"
+                     class="img-fluid rounded-4 shadow-lg hero-image">
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- BANNER -->
+<div id="bannerCarousel" class="carousel slide banner-section" data-bs-ride="carousel" data-bs-interval="4000">
+
+    <!-- Indicators -->
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#bannerCarousel" data-bs-slide-to="2"></button>
+    </div>
+
+    <!-- Slides -->
+    <div class="carousel-inner">
+
+        <!-- Slide 1 -->
+        <div class="carousel-item active">
+            <img src="{% static 'img/banner/banner1.jpg' %}" class="d-block w-100 banner-img" alt="Sale Banner">
+            <div class="carousel-caption text-start">
+                <h2>Big Sale Up To 50% Off</h2>
+                <p>Limited time offer on premium products</p> 
+                <a href="#" class="btn btn-light btn-lg rounded-pill fw-semibold">Shop Now</a>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="carousel-item">
+            <img src="{% static 'img/banner/banner2.png' %}" class="d-block w-100 banner-img" alt="New Arrivals">
+            <div class="carousel-caption text-start">
+                <h2>New Arrivals</h2>
+                <p>Fresh collections just dropped</p> 
+                <a href="#" class="btn btn-light btn-lg rounded-pill fw-semibold">Explore</a>
+            </div>
+        </div>
+
+        <!-- Slide 3 -->
+        <div class="carousel-item">
+            <img src="{% static 'img/banner/banner3.jpg' %}" class="d-block w-100 banner-img" alt="Best Quality">
+            <div class="carousel-caption text-start">
+                <h2>Best Quality Products</h2>
+                <p>Handpicked items for you</p> 
+                <a href="#" class="btn btn-light btn-lg rounded-pill fw-semibold">View Products</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Arrow Controls -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+
+</div>
+
+
+<!-- FEATURES -->
+<div class="row text-center mb-5">
+    <div class="col-md-3"><i class="fas fa-truck fa-2x mb-2"></i><h6>Free Shipping</h6></div>
+    <div class="col-md-3"><i class="fas fa-undo fa-2x mb-2"></i><h6>Easy Returns</h6></div>
+    <div class="col-md-3"><i class="fas fa-lock fa-2x mb-2"></i><h6>Secure Payment</h6></div>
+    <div class="col-md-3"><i class="fas fa-headset fa-2x mb-2"></i><h6>24/7 Support</h6></div>
+</div>
+
+<!-- FEATURED PRODUCTS -->
+<div class="section-header">
+    <h2 class="section-title">Featured Products</h2>
+    <p class="section-subtitle">Popular items loved by customers</p>
+</div>
+
+<div class="row g-4">
+{% for product in feature_products|slice:":4" %}
+    <div class="col-md-3">
+        <div class="card product-card h-100">
+            <div class="product-img-container">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="product-img">
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h6 class="product-title">{{ product.name }}</h6>
+                <p class="product-price">৳ {{ product.price }}</p>
+            </div>
+            <div class="card-footer bg-white">
+                <a href="{% url 'product_detail' product.slug %}" class="btn btn-sm btn-outline-primary w-100">
+                    View Details
+                </a>
+            </div>
+        </div>
+    </div>
+{% empty %}
+    <p class="text-center">No products available</p>
+{% endfor %}
+</div>
+
+<!-- CATEGORIES -->
+<div class="section-header mt-5">
+    <h2 class="section-title">Shop by Category</h2>
+</div>
+
+<div class="row g-4">
+{% for category in categories|slice:":3" %}
+    <div class="col-md-4">
+        <div class="card category-card h-100 text-center p-4">
+            <div class="category-icon mb-3">
+                <i class="fas fa-tags"></i>
+            </div>
+            <h5>{{ category.name }}</h5>
+            <p>{{ category.description|truncatechars:80 }}</p>
+            <a href="{% url 'product_list_by_category' category.slug %}" class="btn btn-outline-primary rounded-pill">Browse</a>
+        </div>
+    </div>
+{% empty %}
+    <p class="text-center">No categories found</p>
+{% endfor %}
+</div>
+
+<!-- NEWSLETTER -->
+<div class="card bg-dark text-white mt-5 p-5 text-center">
+    <h3>Subscribe to Newsletter</h3>
+    <p>Get updates & offers</p>
+    <form class="row justify-content-center">
+        <div class="col-md-6">
+            <input type="email" class="form-control form-control-lg" placeholder="Email">
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-light btn-lg w-100">Subscribe</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

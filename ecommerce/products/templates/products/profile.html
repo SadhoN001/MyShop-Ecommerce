@@ -1,0 +1,539 @@
+{% extends 'base.html' %}
+
+{% block title %}My Profile | E-Shop{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ----------- Layout ----------- */
+.profile-container {
+    padding: 2rem 0;
+}
+.profile-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.profile-title {
+    font-weight: 700;
+    color: #333;
+}
+.profile-subtitle {
+    color: #777;
+    font-size: 1.1rem;
+}
+
+/* ----------- Sidebar ----------- */
+.profile-sidebar {
+    position: sticky;
+    top: 20px;
+}
+.sidebar-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+.sidebar-card .card-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    color: white;
+    font-weight: 600;
+}
+.sidebar-menu .list-group-item {
+    border: none;
+    border-left: 3px solid transparent;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+.sidebar-menu .list-group-item:hover {
+    background-color: rgba(106, 17, 203, 0.05);
+    border-left-color: #b7b0bdff;
+}
+.sidebar-menu .list-group-item.active {
+    background-color: rgba(106, 17, 203, 0.1);
+    border-left-color: #797084ff;
+    font-weight: 600;
+}
+.sidebar-menu .text-danger:hover {
+    background-color: rgba(220, 53, 69, 0.05);
+    border-left-color: #dc3545;
+}
+
+/* ----------- Avatar ----------- */
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #6a11cb;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: 600;
+    margin: 0 auto 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* ----------- Cards ----------- */
+.content-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+    transition: all 0.3s ease;
+}
+.content-card:hover {
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+.content-card .card-header h5 {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+.content-card .card-header i {
+    margin-right: 0.75rem;
+    color: #6a11cb;
+}
+
+/* ----------- Info ----------- */
+.info-label {
+    color: #777;
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* ----------- Stats ----------- */
+.profile-stats {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.stat-item {
+    text-align: center;
+    flex: 1 1 30%;
+}
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(106, 17, 203, 0.1);
+    color: #6a11cb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 auto 0.5rem;
+    font-size: 1.5rem;
+}
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #6a11cb;
+}
+.stat-label {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* ----------- Order Table ----------- */
+.order-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.status-badge {
+    font-weight: 500;
+    padding: 0.375rem 0.75rem;
+    border-radius: 50px;
+}
+.view-btn {
+    border-radius: 50px;
+}
+
+/* ----------- Empty Orders ----------- */
+.empty-orders {
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+.empty-icon {
+    font-size: 4rem;
+    color: #e9ecef;
+    margin-bottom: 1rem;
+}
+.browse-btn {
+    border-radius: 50px;
+    padding: 0.5rem 1.5rem;
+}
+.action-btn {
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    font-weight: 500;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* ----------- Modal Custom ----------- */
+.modal-header {
+    background: linear-gradient(135deg,#6a11cb 0%,#2575fc 100%);
+    color:white;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Header -->
+    <div class="profile-header">
+        <h1 class="profile-title">My Account</h1>
+        <p class="profile-subtitle">Manage your profile and view your order history</p>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="profile-sidebar">
+                <!-- Navigation -->
+                <div class="sidebar-card card">
+                    <div class="card-header">Account Navigation</div>
+                    <div class="sidebar-menu list-group list-group-flush">
+                        <a href="{% url 'profile' %}" class="list-group-item {% if not order_history_active %}active{% endif %}">
+                            <i class="fas fa-user"></i> Profile Information
+                        </a>
+                        <a href="{% url 'profile' %}?tab=orders" class="list-group-item {% if order_history_active %}active{% endif %}">
+                            <i class="fas fa-shopping-bag"></i> Order History
+                        </a>
+                        <a href="{% url 'logout' %}" class="list-group-item text-danger">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Avatar Card -->
+                <div class="sidebar-card card text-center">
+                    <div class="card-body">
+                        <div class="profile-avatar">
+                            {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                        </div>
+                        <h5>{{ user.get_full_name }}</h5>
+                        <p class="text-muted mb-0">{{ user.email }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            {% if not order_history_active %}
+            <!-- Profile Info -->
+            <div class="content-card card">
+                <div class="card-header"><i class="fas fa-user-circle"></i> Personal Information</div>
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="info-label">Full Name</div>
+                            <div class="info-value">{{ user.get_full_name }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-label">Username</div>
+                            <div class="info-value">{{ user.username }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{ user.email }}</div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-label">Member Since</div>
+                            <div class="info-value">{{ user.date_joined|date:"F d, Y" }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <div class="stat-icon"><i class="fas fa-shopping-cart"></i></div>
+                            <div class="stat-value">{{ orders|length }}</div>
+                            <div class="stat-label">Total Orders</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-value">{{ completed_orders }}</div>
+                            <div class="stat-label">Completed Orders</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+                            <div class="stat-value">৳{{ total_spent }}</div>
+                            <div class="stat-label">Total Spent</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if order_history_active %}
+            <!-- Orders -->
+            <div class="content-card card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <i class="fas fa-history"></i> Order History
+                    {% if orders %}<span class="badge bg-primary rounded-pill">{{ orders|length }}</span>{% endif %}
+                </div>
+                <div class="card-body p-0">
+                    {% if orders %}
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders %}
+                                <tr>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.created|date:"M d, Y" }}</td>
+                                    <td>
+                                        <span class="status-badge badge {% if order.status == 'delivered' %}bg-success{% elif order.status == 'shipped' %}bg-info{% elif order.status == 'processing' %}bg-primary{% elif order.status == 'canceled' %}bg-danger{% else %}bg-secondary{% endif %}">
+                                            {{ order.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>৳{{ order.get_total_cost }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary view-btn" data-bs-toggle="modal" data-bs-target="#orderModal{{ order.id }}">
+                                            <i class="fas fa-eye me-1"></i> View
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="empty-orders">
+                        <div class="empty-icon"><i class="fas fa-shopping-bag"></i></div>
+                        <h3>No Orders Yet</h3>
+                        <p>You haven't placed any orders yet. Browse our products to find something you'll love!</p>
+                        <a href="{% url 'product_list' %}" class="btn btn-primary browse-btn"><i class="fas fa-store me-2"></i> Browse Products</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Order Modals -->
+   <!-- Order Detail Modals -->
+{% for order in orders %}
+<div class="modal fade order-modal" id="orderModal{{ order.id }}" tabindex="-1"
+     aria-labelledby="orderModalLabel{{ order.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel{{ order.id }}">
+                    <i class="fas fa-receipt me-2"></i> Order #{{ order.id }} Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+
+                <!-- Order Summary -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3 col-6">
+                        <div class="order-info-label">Order Date</div>
+                        <div class="order-info-value">
+                            <i class="fas fa-calendar-alt me-1 text-primary"></i>
+                            {{ order.created|date:"M d, Y" }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <div class="order-info-label">Status</div>
+                        <div class="order-info-value">
+                            <span class="badge 
+                                {% if order.status == 'delivered' %}bg-success
+                                {% elif order.status == 'shipped' %}bg-info
+                                {% elif order.status == 'processing' %}bg-primary
+                                {% elif order.status == 'canceled' %}bg-danger
+                                {% else %}bg-secondary{% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <div class="order-info-label">Total Amount</div>
+                        <div class="order-info-value">
+                            <i class="fas fa-money-bill-wave me-1 text-primary"></i>
+                            ৳{{ order.get_total_cost }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <div class="order-info-label">Payment</div>
+                        <div class="order-info-value">
+                            {% if order.paid %}
+                                <span class="badge bg-success">Paid</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address & Contact -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <div class="order-address">
+                            <h6 class="fw-bold">
+                                <i class="fas fa-map-marker-alt me-2"></i>Shipping Address
+                            </h6>
+                            <address class="mb-0">
+                                <strong>{{ order.first_name }} {{ order.last_name }}</strong><br>
+                                {{ order.address }}<br>
+                                {{ order.city }}, {{ order.postal_code }}
+                            </address>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="order-address">
+                            <h6 class="fw-bold">
+                                <i class="fas fa-envelope me-2"></i>Contact Info
+                            </h6>
+                            <p class="mb-1"><strong>Email:</strong> {{ order.email }}</p>
+
+                            {% if order.paid and order.transaction_id %}
+                            <p class="mb-0">
+                                <strong>Transaction ID:</strong>
+                                <span class="text-muted">{{ order.transaction_id }}</span>
+                            </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <h6 class="fw-bold mb-3">
+                    <i class="fas fa-box me-2 text-primary"></i>Order Items
+                </h6>
+
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product</th>
+                                <th class="text-center">Price</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-center">Total</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in order.items.all %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}"
+                                             class="me-3 rounded"
+                                             style="width:50px;height:50px;object-fit:cover;">
+                                        {% else %}
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center me-3"
+                                             style="width:50px;height:50px;">
+                                            <i class="fas fa-image text-muted"></i>
+                                        </div>
+                                        {% endif %}
+                                        <div>
+                                            <div class="fw-semibold">{{ item.product.name }}</div>
+                                            {% if item.product.category %}
+                                            <small class="text-muted">{{ item.product.category.name }}</small>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-center">৳{{ item.price }}</td>
+                                <td class="text-center">{{ item.quantity }}</td>
+                                <td class="text-center fw-bold">৳{{ item.get_cost }}</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                                        <!-- View Product -->
+                                        <a href="{% url 'product_detail' item.product.slug %}"
+                                        class="btn btn-sm btn-light border shadow-sm action-btn"
+                                        title="View Product">
+                                            <i class="fas fa-eye text-secondary"></i>
+                                            <span class="d-none d-md-inline ms-1">View</span>
+                                        </a>
+
+                                        <!-- Rate Product -->
+                                        {% if order.paid %}
+                                        <a href="{% url 'rate_product' item.product.id %}"
+                                        class="btn btn-sm btn-warning shadow-sm action-btn"
+                                        title="Rate Product">
+                                            <i class="fas fa-star"></i>
+                                            <span class="d-none d-md-inline ms-1">Rate</span>
+                                        </a>
+                                        {% endif %}
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Grand Total</td>
+                                <td class="text-center fw-bold">৳{{ order.get_total_cost }}</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                {% if order.note %}
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-sticky-note me-2"></i>{{ order.note }}
+                </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                {% if order.status == 'processing' %}
+                <a href="#" class="btn btn-outline-danger">
+                    <i class="fas fa-times me-1"></i>Cancel Order
+                </a>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+</div>
+{% endblock %}

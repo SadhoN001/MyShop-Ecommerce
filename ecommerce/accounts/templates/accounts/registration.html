@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load socialaccount %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card auth-card p-4">
+            <h3 class="text-center mb-3">Create Account</h3>
+
+            <form method="POST">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button class="btn btn-success w-100 mt-3">Register</button>
+            </form>
+
+            <hr>
+            <a href="{% provider_login_url 'google' %}" class="btn btn-danger w-100">
+                Sign up with Google
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

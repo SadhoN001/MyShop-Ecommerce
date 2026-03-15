@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} | E-Shop{% endblock %}
+
+{% block extra_css %}
+<style>
+.product-img {
+    max-height: 420px;
+    object-fit: cover;
+}
+.rating {
+    color: #f4c150;
+}
+.related-card img {
+    height: 180px;
+    object-fit: cover;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'product_list' %}">Products</a></li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'product_list_by_category' product.category.slug %}">
+                {{ product.category.name }}
+            </a>
+        </li>
+        <li class="breadcrumb-item active">{{ product.name }}</li>
+    </ol>
+</nav>
+
+<!-- Product Section -->
+<div class="row">
+    <div class="col-md-5 mb-4">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" class="img-fluid rounded shadow-sm product-img" alt="{{ product.name }}">
+        {% else %}
+        <div class="bg-light text-center p-5 rounded">
+            <i class="fas fa-image fa-4x text-muted"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="col-md-7">
+        <h2 class="fw-bold">{{ product.name }}</h2>
+
+        <div class="d-flex align-items-center mb-2">
+            <div class="rating me-2">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= product.average_rating %}
+                        <i class="fas fa-star"></i>
+                    {% else %}
+                        <i class="far fa-star"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <span class="text-muted">({{ product.ratings.count }} review{{ product.ratings.count|pluralize }})</span>
+        </div>
+
+        <h3 class="text-primary mb-3">৳{{ product.price }}</h3>
+
+        <p class="text-muted">{{ product.descriptions }}</p>
+
+        <div class="mb-3">
+            {% if product.stock > 0 %}
+            <span class="badge bg-success">In Stock ({{ product.stock }})</span>
+            {% else %}
+            <span class="badge bg-danger">Out of Stock</span>
+            {% endif %}
+            <span class="badge bg-secondary">{{ product.category.name }}</span>
+        </div>
+
+        {% if product.stock > 0 %}
+        <form action="{% url 'cart_add' product.id %}" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-lg">
+                <i class="fas fa-ing-cart me-2"></i>Add to Cart
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Reviews -->
+<div class="mt-5">
+    <h4>Customer Reviews</h4>
+
+    {% if product.ratings.count > 0 %}
+        {% for rating in product.ratings.all %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <strong>{{ rating.user.username }}</strong>
+                    <div class="rating">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= rating.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <p class="text-muted small mb-1">{{ rating.created|date:"F d, Y" }}</p>
+                <p class="mb-0">{{ rating.comment }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No reviews yet.</p>
+    {% endif %}
+</div>
+
+{% if page_obj %}
+<div class="mt-5">
+    <h4 class="mb-4">Related Products</h4>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        {% for product in page_obj %}
+        <div class="col">
+            <div class="card h-100 shadow-sm related-card">
+
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                {% else %}
+                <div class="bg-light text-center py-5">
+                    <i class="fas fa-image fa-3x text-muted"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h6 class="mb-1">{{ product.name }}</h6>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-primary">৳{{ product.price }}</span>
+                        <div class="rating small">
+                            {% for i in "12345" %}
+                                {% if forloop.counter <= product.average_rating %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white border-0">
+                    <a href="{% url 'product_detail' product.slug %}"
+                       class="btn btn-outline-primary btn-sm w-100">
+                        View Details
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&laquo;</span>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% else %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <span class="page-link">&raquo;</span>
+        </li>
+        {% endif %}
+
+    </ul>
+</nav>
+{% endif %}
+</div>
+{% endif %}
+
+{% endblock %}
