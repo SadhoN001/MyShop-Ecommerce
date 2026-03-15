@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -100,7 +101,7 @@ WSGI_APPLICATION = "ecommerce.wsgi.application"
 # }
 DATABASES = {
     'default': dj_database_url.parse(
-        'postgresql://ecommerce_4owv_user:2P9OaIdDl2MsL5TuqntBRQZQp2k1X2Sv@dpg-d6r38095pdvs73bjkq70-a.oregon-postgres.render.com/ecommerce_4owv',
+        config('DATABASE_URL'),
         conn_max_age=600
     )
 }
