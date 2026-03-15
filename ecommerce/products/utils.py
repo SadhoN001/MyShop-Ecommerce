@@ -2,7 +2,7 @@ import json
 import requests
 from django.conf import settings
 from django.template.loader import render_to_string
-from django.core.mail import EmailMultiAlternatives
+# from django.core.mail import EmailMultiAlternatives
 
 def generate_sslcommerz_payment(order, request):
     """Generate SSLCommerz payment URL"""
@@ -73,10 +73,19 @@ def send_verification_email(user, verify_url):
     )
 
 
+# def send_order_confirmation_email(order):
+#     subject = f"Order Confirmation - Order #{order.id}"
+#     message = render_to_string('products/email/order_confirmation.html', {'order': order})
+#     to = order.email 
+#     send_email = EmailMultiAlternatives(subject, '', to=[to])
+#     send_email.attach_alternative(message, 'text/html')
+#     send_email.send()
 def send_order_confirmation_email(order):
-    subject = f"Order Confirmation - Order #{order.id}"
-    message = render_to_string('products/email/order_confirmation.html', {'order': order})
-    to = order.email 
-    send_email = EmailMultiAlternatives(subject, '', to=[to])
-    send_email.attach_alternative(message, 'text/html')
-    send_email.send()
+    """Order confirmation email"""
+    html_content = render_to_string('products/email/order_confirmation.html', {'order': order})
+    send_brevo_email(
+        to_email=order.email,
+        subject=f"Order Confirmation - Order #{order.id}",
+        text_content=f"Your order #{order.id} has been confirmed!",
+        html_content=html_content
+    )
