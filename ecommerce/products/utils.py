@@ -40,6 +40,39 @@ def generate_sslcommerz_payment(order, request):
         print("SSLCommerz Error:", str(e))
         return {'status': 'FAILED', 'failedreason': str(e)}
     
+def send_brevo_email(to_email, subject, text_content, html_content=None):
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": settings.BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+    data = {
+        "sender": {"name": "MyShop", "email": "skdsadhon@gmail.com"},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "textContent": text_content,
+    }
+    if html_content:
+        data["htmlContent"] = html_content
+
+    try:
+        response = requests.post(url, json=data, headers=headers)
+        return response.status_code == 201
+    except Exception as e:
+        print(f"Email error: {e}")
+        return False
+
+
+def send_verification_email(user, verify_url):
+    """Registration verification email"""
+    send_brevo_email(
+        to_email=user.email,
+        subject="Verify your Email",
+        text_content=f"Click the link to verify your account: {verify_url}"
+    )
+
+
 def send_order_confirmation_email(order):
     subject = f"Order Confirmation - Order #{order.id}"
     message = render_to_string('products/email/order_confirmation.html', {'order': order})

@@ -10,7 +10,7 @@ from django.urls import reverse
 from .forms import RegisterForm
 from .models import Profile
 from .tokens import generate_token
-
+from products.utils import send_verification_email
 
 def registration(request):
     if request.method == 'POST':
@@ -29,12 +29,13 @@ def registration(request):
                     reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
                 )
             
-            send_mail(
-                'Verify your Email',
-                f'Click the link to verify: {verify_url}',
-                'skdsadhon@gmail.com',
-                [user.email],
-            )
+            # send_mail(
+            #     'Verify your Email',
+            #     f'Click the link to verify: {verify_url}',
+            #     'skdsadhon@gmail.com',
+            #     [user.email],
+            # )
+            send_verification_email(user, verify_url) 
             messages.success(request, "Check you email to verify account")
             return redirect('login')
     else:
