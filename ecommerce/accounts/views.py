@@ -20,7 +20,7 @@ def registration(request):
                 username= form.cleaned_data['username'],
                 email= form.cleaned_data['email'],
                 password= form.cleaned_data['password'],
-                is_active = False
+                is_active = True
             )
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = generate_token.make_token(user)
@@ -75,11 +75,13 @@ def user_login(request):
         
         user = authenticate(username = username, password = password)
         if user is not None:
-            if hasattr(user, 'profile') and user.profile.is_email_verified:
-                login(request, user, backend= 'django.contrib.auth.backends.ModelBackend',)
-                return redirect('home')
-            else:
-                messages.error(request, "Verify email first!")
+            # if hasattr(user, 'profile') and user.profile.is_email_verified:
+            #     login(request, user, backend= 'django.contrib.auth.backends.ModelBackend',)
+            #     return redirect('home')
+            # else:
+            #     messages.error(request, "Verify email first!")
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect('home')
         else:
             messages.error(request, "Invalid credentials")
     
