@@ -27,8 +27,18 @@ def generate_sslcommerz_payment(order, request):
         'product_profile': 'general',
     }
 
-    response = requests.post(settings.SSLCOMMERZ_PAYMENT_URL, data = post_data)
-    return json.loads(response.text)
+    try:
+        response = requests.post(settings.SSLCOMMERZ_PAYMENT_URL, data=post_data, timeout=30)
+        print("SSLCommerz Response Status:", response.status_code)
+        print("SSLCommerz Response Text:", response.text)
+        
+        if not response.text:
+            return {'status': 'FAILED', 'failedreason': 'Empty response from SSLCommerz'}
+        
+        return json.loads(response.text)
+    except Exception as e:
+        print("SSLCommerz Error:", str(e))
+        return {'status': 'FAILED', 'failedreason': str(e)}
     
 def send_order_confirmation_email(order):
     subject = f"Order Confirmation - Order #{order.id}"

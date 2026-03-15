@@ -147,10 +147,10 @@ def checkout(request):
         cart = Cart.objects.get(user = request.user)
         if not cart.items.exists():
             messages.warning(request, f"Your Cart is Empty!")
-            return redirect('product_detail')
+            return redirect('product_list')
     except Cart.DoesNotExist:
         messages.warning(request, f"Your Cart is Empty!")
-        return redirect('product_detail')
+        return redirect('product_list')
     
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
