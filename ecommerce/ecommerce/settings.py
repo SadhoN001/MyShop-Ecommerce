@@ -171,12 +171,12 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'skdsadhon@gmail.com'
-EMAIL_HOST_PASSWORD = 'siianaocysnnfdvq'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 ## SSLCOMMERZ SETUP
 
-SSLCOMMERZ_STORE_ID = 'eshop6939284f934c8'
-SSLCOMMERZ_STORE_PASSWORD = 'eshop6939284f934c8@ssl'
-SSLCOMMERZ_PAYMENT_URL = 'https://sandbox.sslcommerz.com/gwprocess/v3/api.php'
-SSLCOMMERZ_VALIDATION_URL = 'https://sandbox.sslcommerz.com/validator/api/validationserverAPI.php?wsdl'
+SSLCOMMERZ_STORE_ID = config('SSLCOMMERZ_STORE_ID')
+SSLCOMMERZ_STORE_PASSWORD = config('SSLCOMMERZ_STORE_PASSWORD')
+SSLCOMMERZ_PAYMENT_URL = config('SSLCOMMERZ_PAYMENT_URL')
+SSLCOMMERZ_VALIDATION_URL = config('SSLCOMMERZ_VALIDATION_URL')
