@@ -167,7 +167,7 @@ ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 ## EMAIL BACKEND
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_HOST = 'smtp-relay.brevo.com'
 # EMAIL_PORT = 587
 # EMAIL_USE_TLS = True
